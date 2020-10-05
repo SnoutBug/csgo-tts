@@ -42,7 +42,6 @@ namespace csgo_tts_ui
         int len2;
         DateTime currentTime;
         VoiceGender gender = VoiceGender.Male;
-        List<object> arguments = new List<object>();
         List<string> lastMessage = new List<string>();
         List<string> players = new List<string>();
         List<string> alias = new List<string>();
@@ -150,35 +149,6 @@ namespace csgo_tts_ui
                 textPath.ForeColor = Color.Red;
             }
 
-
-            //prepare for background task
-            arguments.Add(configPath);
-            arguments.Add(players);
-            arguments.Add(lastMessage);
-            arguments.Add(timeoutPlayer);
-            arguments.Add(muted);
-            arguments.Add(alias);
-            arguments.Add(name);
-            arguments.Add(spot);
-            arguments.Add(message);
-            arguments.Add(lastChatter);
-            arguments.Add(fullMessage);
-            arguments.Add(newLine);
-            arguments.Add(newPlayer);
-            arguments.Add(playerIndex);
-            arguments.Add(len1);
-            arguments.Add(len2);
-            arguments.Add(currentTime);
-            //settings
-            arguments.Add(path);
-            arguments.Add(region);
-            arguments.Add(readNames);
-            arguments.Add(readSpots);
-            arguments.Add(combine);
-            arguments.Add(filler);
-            arguments.Add(timeout);
-            arguments.Add(gender);
-
             init = false;
             UpdateFileSize();
 
@@ -203,7 +173,6 @@ namespace csgo_tts_ui
         {
             var synthesizer = new SpeechSynthesizer();
             var builder = new PromptBuilder();
-            List<object> arglist = e.Argument as List<object>;
             len1 = RefreshLog(path).Length;
             while (!bw.CancellationPending)
             {
@@ -397,7 +366,7 @@ namespace csgo_tts_ui
                 btnStartStop.Text = "Stop";
                 label1.Text = "Looking for chat messages!";
                 started = true;
-                bw.RunWorkerAsync(arguments);
+                bw.RunWorkerAsync();
             }
             else
             {
