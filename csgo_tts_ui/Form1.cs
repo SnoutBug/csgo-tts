@@ -15,39 +15,57 @@ namespace csgo_tts_ui
 {
     public partial class Form1 : Form
     {
+        //default settings
         string path = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive";
-        string configPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CSGO_TTS\";
-        string newPath;
         string region = "en-US";
-        string genderStr = "Male";
-        long logSize;
-        string name = "";
-        string spot;
-        string message;
-        string fullMessage = "";
-        string newLine = "";
-        string lastChatter = "";
+        string genderStr = "Male";              // gender readable
+        VoiceGender gender = VoiceGender.Male; // and non-readable
         bool readNames = true;
         bool readSpots = false;
         bool combine = true;
         bool filler = true;
-        bool started = false;
-        bool newPlayer = false;
-        bool switching = false;
         bool useAlias = false;
-        bool init = true;
         int timeout = 10;
+
+        //some variables i need in multiple methods
+        string newPath;
+        string configPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CSGO_TTS\";
+        long logSize;
+
+        int len1; //previous log length
+        int len2; //current log length
+        string newLine = ""; //latest updated line
+
+        //used for logging players
         int playerIndex;
-        int len1;
-        int len2;
+        string lastChatter = "";
+        bool newPlayer = false;
         DateTime currentTime;
-        VoiceGender gender = VoiceGender.Male;
+
+        //processed, clean variables
+        string spot;
+        string name = "";
+        string message;
+
+        //full processed message containing fillers, spots, names, whatever the user checked
+        string fullMessage = "";
+
+        //is started and initialized
+        bool started = false;
+        bool init = true;
+
+        //used so the check-boxes wont untick on change
+        bool switching = false;
+
+        //lists
         List<string> lastMessage = new List<string>();
         List<string> players = new List<string>();
         List<string> alias = new List<string>();
         List<DateTime> timeoutPlayer = new List<DateTime>();
         List<string> config = new List<string>();
         List<bool> muted = new List<bool>();
+
+
         public Form1()
         {
             InitializeComponent();
@@ -56,8 +74,9 @@ namespace csgo_tts_ui
             bw.WorkerReportsProgress = false;
             bw.WorkerSupportsCancellation = true;
             string configFile = configPath + @"config.txt";
-            int g = 0;
-            int r = 0;
+
+            int g = 0;//gender in numeral
+            int r = 0;//region index in culture drop down
 
             //create config file
             if (!File.Exists(configFile))
@@ -89,6 +108,7 @@ namespace csgo_tts_ui
             genderStr = File.ReadLines(configFile).Skip(7).Take(1).First().Split('=')[1];
             useAlias = bool.Parse(File.ReadLines(configFile).Skip(8).Take(1).First().Split('=')[1]);
 
+            //convert variables from config file to usable
             if (genderStr == "Female")
             {
                 gender = VoiceGender.Female;
@@ -121,6 +141,7 @@ namespace csgo_tts_ui
             {
                 checkAlias.Checked = true;
             }
+
             numTimeout.Value = timeout;
             textPath.Text = path;
             dropGender.SelectedIndex = g;
@@ -169,6 +190,7 @@ namespace csgo_tts_ui
                 }
             }
         }
+
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             var synthesizer = new SpeechSynthesizer();
