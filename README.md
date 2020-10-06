@@ -2,7 +2,8 @@
 Enables TTS for Counter-Strike: Global Offensive in-game chat
 
 ## Download the latest release version [here](https://github.com/SnoutBug/csgotts/releases)!
-
+ Watch [this](https://www.youtube.com/watch?v=gQUS7W-mtOg) video for a showcase!
+ 
 ## Setup:
  **-condebug** in CSGO launch options
  Start Counter-Strike Global Offensive.exe
@@ -26,7 +27,6 @@ Enables TTS for Counter-Strike: Global Offensive in-game chat
  Mute              | Check this box to mute the selected player.
  Use Alias         | Enable whether aliases should be used or not.
  Delete            | CS:GO log files can get quite bit after some time, so if CS:GO is not running feel free to press this button.
-
- Watch [this](https://www.youtube.com/watch?v=gQUS7W-mtOg) video for a showcase!
+ 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
