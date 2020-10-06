@@ -2,7 +2,7 @@
 Enables TTS for Counter-Strike: Global Offensive in-game chat
 
 ## Download the latest release version [here](https://github.com/SnoutBug/csgotts/releases)!
- Watch [this](https://www.youtube.com/watch?v=gQUS7W-mtOg) video for a showcase!
+ Watch [this video](https://www.youtube.com/watch?v=gQUS7W-mtOg) for a showcase!
  
 ## Setup:
  **-condebug** in CSGO launch options
