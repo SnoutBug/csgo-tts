@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Speech.Synthesis;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,6 +17,11 @@ namespace csgo_tts_ui
 {
     public partial class Form1 : Form
     {
+        //CURRENT VERSION
+        double currentVersion = 1.1;
+
+
+
         //default settings
         string path = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive";
         string region = "en-US";
@@ -65,7 +72,6 @@ namespace csgo_tts_ui
         List<string> config = new List<string>();
         List<bool> muted = new List<bool>();
 
-
         public Form1()
         {
             InitializeComponent();
@@ -78,6 +84,11 @@ namespace csgo_tts_ui
             int g = 0;//gender in numeral
             int r = 0;//region index in culture drop down
 
+            //check for 
+            //string latestVersion = await GetLatestVersion();
+
+
+            CheckForUpdates();
             //create config file
             if (!File.Exists(configFile))
             {
@@ -225,13 +236,14 @@ namespace csgo_tts_ui
                     newLine = temp[temp.Length - 1];
                     currentTime = DateTime.Now;
                     UpdateFileSize();
-
-                    if (newLine.Contains('@') && newLine.Contains("Terrorist)"))
+                    //                   \/ special char right here
+                    if (newLine.Contains('‎') && newLine.Contains("Terrorist)"))
                     {
                         //chat message found
-                        dynamic match = Regex.Match(newLine, @"Terrorist\) (.+?)@ ").Groups[1].Value;
+                        dynamic match = Regex.Match(newLine, @"Terrorist\) (.+?)‎").Groups[1].Value;
                         match = Regex.Match(match, @"(?i)^[A-Za-z0-9 @!#_:-]+");
                         name = Convert.ToString(match);
+
                         if (!players.Contains(name))
                         {
                             //new chatter found
@@ -244,10 +256,19 @@ namespace csgo_tts_ui
                         }
 
                         playerIndex = players.IndexOf(name);
-                        match = Regex.Match(newLine, @" : (.*)*").Groups[1].Value;
-                        match = Regex.Match(newLine, @" @ (.+?) : ").Groups[1].Value;
-                        spot = Convert.ToString(match);
-                        message = newLine.Split(new[] { @"@ " + spot + " : " }, StringSplitOptions.None).Last();
+                        if (newLine.Contains('@'))
+                        {
+                            match = Regex.Match(newLine, @" : (.*)*").Groups[1].Value;
+                            match = Regex.Match(newLine, @" @ (.+?) : ").Groups[1].Value;
+                            spot = Convert.ToString(match);
+                            message = newLine.Split(new[] { @"@ " + spot + " : " }, StringSplitOptions.None).Last();
+                        }
+                        else
+                        {
+                            spot = "";
+                            message = newLine.Split(new[] { @"‎ : "}, StringSplitOptions.None).Last();
+                        }
+
                         message = message.Replace("\n", "");
                         //compile message from config file settings
                         fullMessage = "";
@@ -405,7 +426,7 @@ namespace csgo_tts_ui
             List<string> file = new List<string>();
             if (File.Exists(path + @"\csgo\console.log"))
             {
-                using (var csv = new FileStream(path + @"\csgo\console.log", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var csv = new FileStream(path + @"\csgo\console.log", System.IO.FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (var sr = new StreamReader(csv))
                 {
                     while (!sr.EndOfStream)
@@ -498,6 +519,7 @@ namespace csgo_tts_ui
             changeLine(6, "Combine Messages   =" + Convert.ToString(combine), tempPath);
             changeLine(7, "Region             =" + Convert.ToString(region), tempPath);
             changeLine(8, "Gender             =" + Convert.ToString(genderStr), tempPath);
+            changeLine(9, "Use Alias          =" + Convert.ToString(useAlias), tempPath);
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -647,6 +669,7 @@ namespace csgo_tts_ui
             {
                 useAlias = false;
             }
+            saveChanges();
         }
 
         private void Label1_Click(object sender, EventArgs e)
@@ -710,7 +733,7 @@ namespace csgo_tts_ui
             FileInfo file = new FileInfo(path);
             try
             {
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
+                using (FileStream stream = file.Open(System.IO.FileMode.Open, FileAccess.Read, FileShare.None))
                 {
                     stream.Close();
                 }
@@ -746,7 +769,14 @@ namespace csgo_tts_ui
 
         private void Button1_Click_1(object sender, EventArgs e)
         {
-            string message = "Set up:\n1. Open your Steam Library.\n2. Find Counter-Strike: Global Offensive in your Library.\n3. Right-click CS:GO then chose Properties.\n4. Click the \"SET LAUNCH OPTIONS\" button.\n5. Enter -condebug and confirm.";
+            string message = "Set up:\n1. Open your Steam Library.\n" +
+                "2. Find Counter-Strike: Global Offensive in your Library.\n" +
+                "3. Right-click CS:GO then chose Properties.\n" +
+                "4. Click the \"SET LAUNCH OPTIONS\" button.\n" +
+                "5. Enter -condebug and confirm." +
+                "\n" +
+                "\n" +
+                "created by snoutie";
             string title = "Counter-Strike: Global Offensive TTS - Help Window";
             DialogResult result = MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Question);
             if (IsFileUsed(path+@"\csgo\console.log"))
@@ -758,6 +788,33 @@ namespace csgo_tts_ui
             {
                 btnDelete.Text = "Delete";
                 btnDelete.Enabled = true;
+            }
+            CheckForUpdates();
+        }
+        private void CheckForUpdates()
+        {
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "csgotts");
+                var response = client.GetAsync("https://api.github.com/repos/snoutbug/csgotts/releases/latest").Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = response.Content;
+                    string responseString = responseContent.ReadAsStringAsync().Result;
+                    double ver = Convert.ToDouble(responseString.Split(',')[7].Split('"')[3].Replace('.',','));
+                    if (ver > currentVersion)
+                    {
+                        DialogResult result = MessageBox.Show("There is a new version available.\nDo you want to download it?", "Update Available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                        if (result == DialogResult.Yes)
+                        {
+                            System.Diagnostics.Process.Start("https://github.com/snoutbug/csgotts/releases/latest");
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Could not check for updates.", "Network Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
     }
