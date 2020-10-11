@@ -62,6 +62,7 @@
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -315,6 +316,7 @@
             this.checkAlias.Text = "Use Alias";
             this.checkAlias.UseVisualStyleBackColor = true;
             this.checkAlias.CheckedChanged += new System.EventHandler(this.CheckAlias_CheckedChanged);
+            this.checkAlias.MouseHover += new System.EventHandler(this.CheckAlias_MouseHover);
             // 
             // notifyIcon1
             // 
@@ -408,6 +410,7 @@
             this.MinimumSize = new System.Drawing.Size(642, 374);
             this.Name = "Form1";
             this.Text = "Counter-Strike: Global Offensive Text-to-Speech";
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -448,6 +451,7 @@
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 

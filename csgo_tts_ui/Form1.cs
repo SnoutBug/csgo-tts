@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Speech.Synthesis;
 using System.Collections.Generic;
 using System.Drawing;
@@ -18,8 +17,7 @@ namespace csgo_tts_ui
     public partial class Form1 : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.2;
-
+        double currentVersion = 1.21;
 
 
         //default settings
@@ -81,6 +79,7 @@ namespace csgo_tts_ui
             bw.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             bw.WorkerReportsProgress = false;
             bw.WorkerSupportsCancellation = true;
+            
             string configFile = configPath + @"config.txt";
 
             int g = 0;//gender in numeral
@@ -90,7 +89,6 @@ namespace csgo_tts_ui
             //string latestVersion = await GetLatestVersion();
 
 
-            CheckForUpdates();
             //create config file
             if (!File.Exists(configFile))
             {
@@ -137,6 +135,11 @@ namespace csgo_tts_ui
             if (readNames)
             {
                 checkName.Checked = true;
+                checkAlias.Enabled = true;
+            }
+            else
+            {
+                checkAlias.Enabled = false;
             }
             if (readSpots)
             {
@@ -184,9 +187,6 @@ namespace csgo_tts_ui
                 textPath.ForeColor = Color.Red;
             }
 
-            init = false;
-            UpdateFileSize();
-
             if (btnDelete.Enabled)
             {
                 if (IsFileUsed(path + @"\csgo\console.log"))
@@ -203,6 +203,11 @@ namespace csgo_tts_ui
                     btnDelete.Text = "Delete";
                 }
             }
+
+
+            init = false;
+            UpdateFileSize();
+            CheckForUpdates();
         }
 
         //main background loop
@@ -505,10 +510,12 @@ namespace csgo_tts_ui
             if (checkName.Checked)
             {
                 readNames = true;
+                checkAlias.Enabled = true;
             }
             else
             {
                 readNames = false;
+                checkAlias.Enabled = false;
             }
             saveChanges();
         }
@@ -864,6 +871,7 @@ namespace csgo_tts_ui
                         if (result == DialogResult.Yes)
                         {
                             System.Diagnostics.Process.Start("https://github.com/snoutbug/csgotts/releases/latest");
+                            this.Close();
                         }
                     }
                 }
@@ -896,6 +904,37 @@ namespace csgo_tts_ui
             m = Regex.Match(m, @"(?i)^[A-Za-z0-9 @!#(_):-]+");
             string str = Convert.ToString(m);
             return str;
+        }
+
+        private void CheckAlias_MouseHover(object sender, EventArgs e)
+        {
+            if (readNames)
+            {
+                toolTip.SetToolTip(checkAlias, "Use colors, instead of player names");
+            }
+        }
+
+        bool IsShown = false;
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            Control ctrl = this.GetChildAtPoint(e.Location);
+
+            if (ctrl != null)
+            {
+                if (ctrl == this.checkAlias && !IsShown)
+                {
+                    string tipstring = "Enable \"Read Names\" to use this feature";
+                    this.toolTip.GetToolTip(this.checkAlias);
+                    this.toolTip.Show(tipstring, this.checkAlias,
+                    ctrl.Width / 2, ctrl.Height / 2);
+                    IsShown = true;
+                }
+            }
+            else
+            {
+                this.toolTip.Hide(this.checkAlias);
+                IsShown = false;
+            }
         }
     }
 }

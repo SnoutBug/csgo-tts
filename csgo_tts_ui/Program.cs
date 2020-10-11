@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace csgo_tts_ui
@@ -16,7 +13,14 @@ namespace csgo_tts_ui
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            try
+            {
+                Application.Run(new Form1());
+            }
+            catch (ObjectDisposedException e)
+            {
+                Application.Exit();
+            }
         }
     }
 }
