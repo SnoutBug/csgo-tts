@@ -60,7 +60,8 @@
             this.notifyIcon2 = new System.Windows.Forms.NotifyIcon(this.components);
             this.labelSize = new System.Windows.Forms.Label();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnHelp = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -345,24 +346,35 @@
             this.btnDelete.TabIndex = 19;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.Button1_Click);
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // button1
+            // btnHelp
             // 
-            this.button1.Location = new System.Drawing.Point(596, 37);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(18, 19);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "?";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click_1);
+            this.btnHelp.Location = new System.Drawing.Point(596, 37);
+            this.btnHelp.Name = "btnHelp";
+            this.btnHelp.Size = new System.Drawing.Size(18, 19);
+            this.btnHelp.TabIndex = 20;
+            this.btnHelp.Text = "?";
+            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Location = new System.Drawing.Point(511, 170);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 21;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 335);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.labelSize);
             this.Controls.Add(this.checkAlias);
@@ -434,7 +446,8 @@
         private System.Windows.Forms.NotifyIcon notifyIcon2;
         private System.Windows.Forms.Label labelSize;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

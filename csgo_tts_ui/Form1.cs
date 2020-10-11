@@ -47,6 +47,8 @@ namespace csgo_tts_ui
         int playerIndex;
         string lastChatter = "";
         bool newPlayer = false;
+        bool getPlayers = false;
+        bool newPlayerList = false;
         DateTime currentTime;
 
         //processed, clean variables
@@ -157,6 +159,7 @@ namespace csgo_tts_ui
             textPath.Text = path;
             dropGender.SelectedIndex = g;
 
+            btnRefresh.Enabled = false;
             using (SpeechSynthesizer synth = new SpeechSynthesizer())
             {
                 foreach (InstalledVoice voice in synth.GetInstalledVoices())
@@ -202,11 +205,13 @@ namespace csgo_tts_ui
             }
         }
 
+        //main background loop
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             var synthesizer = new SpeechSynthesizer();
             var builder = new PromptBuilder();
             len1 = RefreshLog(path).Length;
+
             while (!bw.CancellationPending)
             {
                 if (!File.Exists(path + @"\csgo\console.log"))
@@ -241,8 +246,7 @@ namespace csgo_tts_ui
                     {
                         //chat message found
                         dynamic match = Regex.Match(newLine, @"Terrorist\) (.+?)‎").Groups[1].Value;
-                        match = Regex.Match(match, @"(?i)^[A-Za-z0-9 @!#_:-]+");
-                        name = Convert.ToString(match);
+                        name = RemoveSpecialChars(match);
 
                         if (!players.Contains(name))
                         {
@@ -258,7 +262,6 @@ namespace csgo_tts_ui
                         playerIndex = players.IndexOf(name);
                         if (newLine.Contains('@'))
                         {
-                            match = Regex.Match(newLine, @" : (.*)*").Groups[1].Value;
                             match = Regex.Match(newLine, @" @ (.+?) : ").Groups[1].Value;
                             spot = Convert.ToString(match);
                             message = newLine.Split(new[] { @"@ " + spot + " : " }, StringSplitOptions.None).Last();
@@ -333,10 +336,7 @@ namespace csgo_tts_ui
                                     lastChatter = name;
 
                                 }
-                                //else
-                                //{
                                 timeoutPlayer[playerIndex] = currentTime.AddSeconds(timeout);
-                                //}
                             }
                             else
                             {
@@ -352,7 +352,51 @@ namespace csgo_tts_ui
                         builder.ClearContent();
                     }
                 }
-                if (newPlayer)
+                //get players with status command
+                if (getPlayers)
+                {
+                    List<int> statusList = new List<int>();
+                    int lc = 0;
+                    getPlayers = false;
+                    string[] lines = RefreshLog(path);
+
+                    foreach (string i in lines)
+                    {
+                        lc += 1;
+                        if (i.Contains("# userid name uniqueid connected ping loss state rate"))
+                        {
+                            statusList.Add(lc);
+                        }
+                    }
+                    int m = statusList.Max();
+                    players.Clear();
+                    timeoutPlayer.Clear();
+                    lastMessage.Clear();
+                    muted.Clear();
+                    alias.Clear();
+
+                    while (lines[m].Contains("\" STEAM_") || lines[m].Contains("\" BOT"))
+                    {
+                        string d = lines[m];
+                        string name;
+                        if (d.Contains("\" STEAM_"))
+                        {
+                            int pFrom = d.IndexOf(" \"") + " \"".Length;
+                            int pTo = d.LastIndexOf("\" STEAM_");
+                            name = RemoveSpecialChars(d.Substring(pFrom, pTo - pFrom));
+                            players.Add(name);
+                            timeoutPlayer.Add(DateTime.Now);
+                            lastMessage.Add("0");
+                            muted.Add(false);
+                            alias.Add("None");
+                            newPlayerList = true;
+                            newPlayer = false;
+                        }
+                        m += 1;
+                    }
+                }
+
+                if (newPlayer || newPlayerList)
                 {
                     bw.CancelAsync();
                 }
@@ -377,6 +421,16 @@ namespace csgo_tts_ui
                     PopulatePlayerList();
                     bw.RunWorkerAsync();
                     labelSize.Text = Convert.ToString(logSize);
+                }
+                else if (newPlayerList)
+                {
+                    newPlayerList = false;
+                    dropPlayerName.Items.Clear();
+                    foreach (string i in players)
+                    {
+                        dropPlayerName.Items.Add(i);
+                    }
+                    bw.RunWorkerAsync();
                 }
                 else
                 {
@@ -409,6 +463,7 @@ namespace csgo_tts_ui
                 btnStartStop.Text = "Stop";
                 label1.Text = "Looking for chat messages!";
                 started = true;
+                btnRefresh.Enabled = true;
                 bw.RunWorkerAsync();
             }
             else
@@ -416,6 +471,7 @@ namespace csgo_tts_ui
                 btnBrowse.Enabled = true;
                 btnStartStop.Text = "Start";
                 started = false;
+                btnRefresh.Enabled = false;
                 bw.CancelAsync();
 
             }
@@ -711,7 +767,7 @@ namespace csgo_tts_ui
                 
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnDelete_Click(object sender, EventArgs e)
         {
             if (!IsFileUsed(path + @"\csgo\console.log"))
             {
@@ -767,7 +823,7 @@ namespace csgo_tts_ui
             });
         }
 
-        private void Button1_Click_1(object sender, EventArgs e)
+        private void btnHelp_Click(object sender, EventArgs e)
         {
             string message = "Set up:\n1. Open your Steam Library.\n" +
                 "2. Find Counter-Strike: Global Offensive in your Library.\n" +
@@ -816,6 +872,30 @@ namespace csgo_tts_ui
                     MessageBox.Show("Could not check for updates.", "Network Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            if (started)
+            {
+                DialogResult result = MessageBox.Show("Please enter \"status\" in your CS:GO-console now.\nPress OK when you are done.", "Refresh Player List.", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                if (result == DialogResult.OK)
+                {
+                    getPlayers = true;
+                }
+            }
+            else
+            {
+                btnRefresh.Enabled = false;
+                MessageBox.Show("Please press the \"Start\"-Button first.", "Worker not started yet.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        static string RemoveSpecialChars(dynamic m)
+        {
+            m = Regex.Match(m, @"(?i)^[A-Za-z0-9 @!#(_):-]+");
+            string str = Convert.ToString(m);
+            return str;
         }
     }
 }
