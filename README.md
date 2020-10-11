@@ -22,11 +22,13 @@ Enables TTS for Counter-Strike: Global Offensive in-game chat
  Combine Messages  | **PlayerOne wrote @T-Start:** gets skipped if the same player writes a new message in a specific time window.
  Region            | Set your Region, if the needed voice pack is installed (eg. en-US, ru-RU, de-DE).
  Gender            | Defines the gender of the synthesised voice (eg. male, female).
- Player Name       | Select a name from the list (only available if the person used the chat before).
- Alias             | Select the color this player is associated with or choose "None" to keep the original name (if Use Alias is checked).
+ Player Name       | Select a name from the list.
+ Alias             | Select the color this player is associated with or choose "None" to keep the original name (if Use Alias and Read Names is checked).
  Mute              | Check this box to mute the selected player.
  Use Alias         | Enable whether aliases should be used or not.
  Delete            | CS:GO log files can get quite bit after some time, so if CS:GO is not running feel free to press this button.
+ Refresh           | Enter **status** in the CS:GO console and press "OK" to add all players to the drop-down list.
+ 
  
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
