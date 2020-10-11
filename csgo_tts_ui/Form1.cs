@@ -18,7 +18,7 @@ namespace csgo_tts_ui
     public partial class Form1 : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.1;
+        double currentVersion = 1.2;
 
 
 
