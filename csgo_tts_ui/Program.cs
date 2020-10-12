@@ -15,9 +15,9 @@ namespace csgo_tts_ui
             Application.SetCompatibleTextRenderingDefault(false);
             try
             {
-                Application.Run(new Form1());
+                Application.Run(new csgo_tts_main());
             }
-            catch (ObjectDisposedException e)
+            catch (ObjectDisposedException)
             {
                 Application.Exit();
             }

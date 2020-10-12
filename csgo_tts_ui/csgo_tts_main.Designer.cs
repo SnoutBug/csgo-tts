@@ -1,6 +1,6 @@
 ﻿namespace csgo_tts_ui
 {
-    partial class Form1
+    partial class csgo_tts_main
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(csgo_tts_main));
             this.bw = new System.ComponentModel.BackgroundWorker();
             this.label1 = new System.Windows.Forms.Label();
             this.checkName = new System.Windows.Forms.CheckBox();
@@ -63,6 +63,7 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.checkTranslate = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -216,7 +217,7 @@
             this.dropGender.Items.AddRange(new object[] {
             "Male",
             "Female"});
-            this.dropGender.Location = new System.Drawing.Point(220, 39);
+            this.dropGender.Location = new System.Drawing.Point(216, 61);
             this.dropGender.Name = "dropGender";
             this.dropGender.Size = new System.Drawing.Size(57, 21);
             this.dropGender.TabIndex = 12;
@@ -225,7 +226,7 @@
             // labelGender
             // 
             this.labelGender.AutoSize = true;
-            this.labelGender.Location = new System.Drawing.Point(283, 43);
+            this.labelGender.Location = new System.Drawing.Point(279, 65);
             this.labelGender.Name = "labelGender";
             this.labelGender.Size = new System.Drawing.Size(42, 13);
             this.labelGender.TabIndex = 6;
@@ -235,7 +236,7 @@
             // 
             this.dropRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dropRegion.FormattingEnabled = true;
-            this.dropRegion.Location = new System.Drawing.Point(220, 84);
+            this.dropRegion.Location = new System.Drawing.Point(216, 33);
             this.dropRegion.Name = "dropRegion";
             this.dropRegion.Size = new System.Drawing.Size(57, 21);
             this.dropRegion.TabIndex = 12;
@@ -244,7 +245,7 @@
             // labelRegion
             // 
             this.labelRegion.AutoSize = true;
-            this.labelRegion.Location = new System.Drawing.Point(283, 88);
+            this.labelRegion.Location = new System.Drawing.Point(279, 37);
             this.labelRegion.Name = "labelRegion";
             this.labelRegion.Size = new System.Drawing.Size(41, 13);
             this.labelRegion.TabIndex = 6;
@@ -370,11 +371,23 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
-            // Form1
+            // checkTranslate
+            // 
+            this.checkTranslate.AutoSize = true;
+            this.checkTranslate.Location = new System.Drawing.Point(220, 92);
+            this.checkTranslate.Name = "checkTranslate";
+            this.checkTranslate.Size = new System.Drawing.Size(95, 17);
+            this.checkTranslate.TabIndex = 22;
+            this.checkTranslate.Text = "Auto-Translate";
+            this.checkTranslate.UseVisualStyleBackColor = true;
+            this.checkTranslate.CheckedChanged += new System.EventHandler(this.CheckTranslate_CheckedChanged);
+            // 
+            // csgo_tts_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 335);
+            this.Controls.Add(this.checkTranslate);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.btnDelete);
@@ -408,7 +421,7 @@
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(642, 374);
             this.MinimumSize = new System.Drawing.Size(642, 374);
-            this.Name = "Form1";
+            this.Name = "csgo_tts_main";
             this.Text = "Counter-Strike: Global Offensive Text-to-Speech";
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).EndInit();
@@ -452,6 +465,7 @@
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox checkTranslate;
     }
 }
 

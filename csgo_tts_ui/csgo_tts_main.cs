@@ -9,15 +9,17 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Net;
+using NTextCat;
 
 //please excuse this mess, this is my first ever program in c#
 
 namespace csgo_tts_ui
 {
-    public partial class Form1 : Form
+    public partial class csgo_tts_main : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.21;
+        double currentVersion = 1.3;
 
 
         //default settings
@@ -30,6 +32,7 @@ namespace csgo_tts_ui
         bool combine = true;
         bool filler = true;
         bool useAlias = false;
+        bool translate = true;
         int timeout = 10;
 
         //some variables i need in multiple methods
@@ -72,7 +75,7 @@ namespace csgo_tts_ui
         List<string> config = new List<string>();
         List<bool> muted = new List<bool>();
 
-        public Form1()
+        public csgo_tts_main()
         {
             InitializeComponent();
             bw.DoWork += backgroundWorker1_DoWork;
@@ -96,29 +99,28 @@ namespace csgo_tts_ui
                 {
                     Directory.CreateDirectory(configPath);
                 }
-                config.Add("CS:GO folder path  =" + path);
-                config.Add("Spam-Timeout (sec) =" + timeout);
-                config.Add("Read Names         =" + readNames);
-                config.Add("Filler             =" + filler);
-                config.Add("Read Spots         =" + readSpots);
-                config.Add("Combine Messages   =" + combine);
-                config.Add("Region             =" + region);
-                config.Add("Gender             =" + gender);
-                config.Add("Use Alias          =" + useAlias);
-                File.WriteAllLines(configFile, config);
+                CreateConfig(configFile);
             }
 
             //read config file
-            path = File.ReadLines(configFile).Skip(0).Take(1).First().Split('=')[1];
-            timeout = Int16.Parse(File.ReadLines(configFile).Skip(1).Take(1).First().Split('=')[1]);
-            readNames = bool.Parse(File.ReadLines(configFile).Skip(2).Take(1).First().Split('=')[1]);
-            filler = bool.Parse(File.ReadLines(configFile).Skip(3).Take(1).First().Split('=')[1]);
-            readSpots = bool.Parse(File.ReadLines(configFile).Skip(4).Take(1).First().Split('=')[1]);
-            combine = bool.Parse(File.ReadLines(configFile).Skip(5).Take(1).First().Split('=')[1]);
-            region = File.ReadLines(configFile).Skip(6).Take(1).First().Split('=')[1];
-            genderStr = File.ReadLines(configFile).Skip(7).Take(1).First().Split('=')[1];
-            useAlias = bool.Parse(File.ReadLines(configFile).Skip(8).Take(1).First().Split('=')[1]);
-
+            if (File.ReadAllLines(configFile).Length > 9)
+            {
+                path = File.ReadLines(configFile).Skip(0).Take(1).First().Split('=')[1];
+                timeout = Int16.Parse(File.ReadLines(configFile).Skip(1).Take(1).First().Split('=')[1]);
+                readNames = bool.Parse(File.ReadLines(configFile).Skip(2).Take(1).First().Split('=')[1]);
+                filler = bool.Parse(File.ReadLines(configFile).Skip(3).Take(1).First().Split('=')[1]);
+                readSpots = bool.Parse(File.ReadLines(configFile).Skip(4).Take(1).First().Split('=')[1]);
+                combine = bool.Parse(File.ReadLines(configFile).Skip(5).Take(1).First().Split('=')[1]);
+                region = File.ReadLines(configFile).Skip(6).Take(1).First().Split('=')[1];
+                genderStr = File.ReadLines(configFile).Skip(7).Take(1).First().Split('=')[1];
+                useAlias = bool.Parse(File.ReadLines(configFile).Skip(8).Take(1).First().Split('=')[1]);
+                translate = bool.Parse(File.ReadLines(configFile).Skip(9).Take(1).First().Split('=')[1]);
+            }
+            else
+            {
+                File.Delete(configFile);
+                CreateConfig(configFile);
+            }
             //convert variables from config file to usable
             if (genderStr == "Female")
             {
@@ -157,7 +159,10 @@ namespace csgo_tts_ui
             {
                 checkAlias.Checked = true;
             }
-
+            if (translate)
+            {
+                checkTranslate.Checked = true;
+            }
             numTimeout.Value = timeout;
             textPath.Text = path;
             dropGender.SelectedIndex = g;
@@ -279,8 +284,16 @@ namespace csgo_tts_ui
 
                         message = message.Replace("\n", "");
                         //compile message from config file settings
+                        string from = GetLanguage(message);
+                        string to = region.Substring(0, 2);
+                        string fillerStr = "wrote";
                         fullMessage = "";
 
+                        if (translate)
+                        {
+                            message = Translate(message, from, to);
+                            fillerStr = Translate(fillerStr, "en", to);
+                        }
 
                         if (readNames)
                         {
@@ -289,14 +302,14 @@ namespace csgo_tts_ui
                             {
                                 if (alias[playerIndex] != "None")
                                 {
-                                    fullMessage = alias[playerIndex];
+                                    fullMessage = Translate(alias[playerIndex], "en", to);
                                 }
                             }
                         }
 
                         if (filler)
                         {
-                            fullMessage = fullMessage + "wrote:";
+                            fullMessage = fullMessage + " "+fillerStr+": ";
                         }
                         else
                         {
@@ -322,7 +335,6 @@ namespace csgo_tts_ui
                                 }
                             }
                         }
-
                         fullMessage = fullMessage + message;
                         builder.StartVoice(new CultureInfo(region));
                         synthesizer.SelectVoiceByHints(gender, VoiceAge.Adult);
@@ -574,15 +586,16 @@ namespace csgo_tts_ui
         private void saveChanges()
         {
             string tempPath = configPath + @"\config.txt";
-            changeLine(1, "CS:GO folder path  =" + Convert.ToString(path), tempPath);
-            changeLine(2, "Spam-Timeout (sec) =" + Convert.ToString(timeout), tempPath);
-            changeLine(3, "Read Names         =" + Convert.ToString(readNames), tempPath);
-            changeLine(4, "Filler             =" + Convert.ToString(filler), tempPath);
-            changeLine(5, "Read Spots         =" + Convert.ToString(readSpots), tempPath);
-            changeLine(6, "Combine Messages   =" + Convert.ToString(combine), tempPath);
-            changeLine(7, "Region             =" + Convert.ToString(region), tempPath);
-            changeLine(8, "Gender             =" + Convert.ToString(genderStr), tempPath);
-            changeLine(9, "Use Alias          =" + Convert.ToString(useAlias), tempPath);
+            changeLine(1,  "CS:GO folder path  =" + Convert.ToString(path), tempPath);
+            changeLine(2,  "Spam-Timeout (sec) =" + Convert.ToString(timeout), tempPath);
+            changeLine(3,  "Read Names         =" + Convert.ToString(readNames), tempPath);
+            changeLine(4,  "Filler             =" + Convert.ToString(filler), tempPath);
+            changeLine(5,  "Read Spots         =" + Convert.ToString(readSpots), tempPath);
+            changeLine(6,  "Combine Messages   =" + Convert.ToString(combine), tempPath);
+            changeLine(7,  "Region             =" + Convert.ToString(region), tempPath);
+            changeLine(8,  "Gender             =" + Convert.ToString(genderStr), tempPath);
+            changeLine(9,  "Use Alias          =" + Convert.ToString(useAlias), tempPath);
+            changeLine(10, "Auto-Translate     =" + Convert.ToString(translate), tempPath);
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -935,6 +948,67 @@ namespace csgo_tts_ui
                 this.toolTip.Hide(this.checkAlias);
                 IsShown = false;
             }
+        }
+
+        private string GetLanguage(string input)
+        {
+            var factory = new RankedLanguageIdentifierFactory();
+            var identifier = factory.Load(@"C:\Users\Friedrich\Documents\Projects\csgo_tts_ui\csgo_tts_ui\Core14.profile.xml");
+            var languages = identifier.Identify(input);
+            var mostCertainLanguage = languages.FirstOrDefault();
+            string lang;
+            if (mostCertainLanguage != null)
+                lang = mostCertainLanguage.Item1.Iso639_3.Substring(0, 2);
+            else
+                lang = "en";
+
+            return lang;
+        }
+
+        private void CheckTranslate_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkTranslate.Checked)
+            {
+                translate = true;
+            }
+            else
+            {
+                translate = false;
+            }
+            saveChanges();
+        }
+
+        public string Translate(string word, string from, string to)
+        {
+            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={from}&tl={to}&dt=t&q={word}";
+            var webClient = new WebClient
+            {
+                Encoding = System.Text.Encoding.UTF8
+            };
+            var result = webClient.DownloadString(url);
+            try
+            {
+                result = result.Substring(4, result.IndexOf("\"", 4, StringComparison.Ordinal) - 4);
+                return result;
+            }
+            catch
+            {
+                return word;
+            }
+        }
+        public void CreateConfig(string configFile)
+        {
+            config.Add("CS:GO folder path  =" + path);
+            config.Add("Spam-Timeout (sec) =" + timeout);
+            config.Add("Read Names         =" + readNames);
+            config.Add("Filler             =" + filler);
+            config.Add("Read Spots         =" + readSpots);
+            config.Add("Combine Messages   =" + combine);
+            config.Add("Region             =" + region);
+            config.Add("Gender             =" + gender);
+            config.Add("Use Alias          =" + useAlias);
+            config.Add("Auto-Translate     =" + translate);
+            File.WriteAllLines(configFile, config);
         }
     }
 }
