@@ -1,4 +1,5 @@
 ﻿using System;
+using NTextCat;
 using System.IO;
 using System.Net.Http;
 using System.Speech.Synthesis;
@@ -10,7 +11,6 @@ using System.Threading;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Net;
-using NTextCat;
 
 //please excuse this mess, this is my first ever program in c#
 
@@ -19,7 +19,7 @@ namespace csgo_tts_ui
     public partial class csgo_tts_main : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.3;
+        double currentVersion = 1.31;
 
 
         //default settings
@@ -82,7 +82,11 @@ namespace csgo_tts_ui
             bw.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             bw.WorkerReportsProgress = false;
             bw.WorkerSupportsCancellation = true;
-            
+
+            //i will come back for this but it works for now, finally, ive spent way to long on this
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve2);
+
             string configFile = configPath + @"config.txt";
 
             int g = 0;//gender in numeral
@@ -100,6 +104,11 @@ namespace csgo_tts_ui
                     Directory.CreateDirectory(configPath);
                 }
                 CreateConfig(configFile);
+            }
+
+            if (!File.Exists(configPath + "Core14.profile.xml"))
+            {
+                File.WriteAllText(configPath + "Core14.profile.xml", Properties.Resources.Core14_profile);
             }
 
             //read config file
@@ -288,7 +297,6 @@ namespace csgo_tts_ui
                         string to = region.Substring(0, 2);
                         string fillerStr = "wrote";
                         fullMessage = "";
-
                         if (translate)
                         {
                             message = Translate(message, from, to);
@@ -953,15 +961,15 @@ namespace csgo_tts_ui
         private string GetLanguage(string input)
         {
             var factory = new RankedLanguageIdentifierFactory();
-            var identifier = factory.Load(@"C:\Users\Friedrich\Documents\Projects\csgo_tts_ui\csgo_tts_ui\Core14.profile.xml");
+            string lang;
+
+            var identifier = factory.Load(configPath+"Core14.profile.xml");
             var languages = identifier.Identify(input);
             var mostCertainLanguage = languages.FirstOrDefault();
-            string lang;
             if (mostCertainLanguage != null)
                 lang = mostCertainLanguage.Item1.Iso639_3.Substring(0, 2);
             else
                 lang = "en";
-
             return lang;
         }
 
@@ -1009,6 +1017,34 @@ namespace csgo_tts_ui
             config.Add("Use Alias          =" + useAlias);
             config.Add("Auto-Translate     =" + translate);
             File.WriteAllLines(configFile, config);
+        }
+        System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".dll", "");
+
+            dllName = dllName.Replace(".", "_");
+
+            if (dllName.EndsWith("_resources")) return null;
+
+            System.Resources.ResourceManager rm = new System.Resources.ResourceManager(GetType().Namespace + ".Properties.Resources", System.Reflection.Assembly.GetExecutingAssembly());
+
+            byte[] bytes = (byte[])rm.GetObject(dllName);
+
+            return System.Reflection.Assembly.Load(bytes);
+        }
+        System.Reflection.Assembly CurrentDomain_AssemblyResolve2(object sender, ResolveEventArgs args)
+        {
+            string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".xml", "");
+
+            dllName = dllName.Replace(".", "_");
+
+            if (dllName.EndsWith("_resources")) return null;
+
+            System.Resources.ResourceManager rm = new System.Resources.ResourceManager(GetType().Namespace + ".Properties.Resources", System.Reflection.Assembly.GetExecutingAssembly());
+
+            byte[] bytes = (byte[])rm.GetObject(dllName);
+
+            return System.Reflection.Assembly.Load(bytes);
         }
     }
 }

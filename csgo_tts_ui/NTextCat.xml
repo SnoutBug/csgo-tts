@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NTextCat</name>
+    </assembly>
+    <members>
+        <member name="T:NTextCat.BagOfWordsFeatureExtractor">
+            <summary>
+            This implementation is not robust or production ready.
+            </summary>
+        </member>
+        <member name="P:NTextCat.BasicProfileFactoryBase`1.AllowUsingMultipleThreadsForTraining">
+            <summary>
+            true if it is allowed to use more than one thread for training
+            </summary>
+        </member>
+        <member name="M:NTextCat.BasicProfileFactoryBase`1.TrainModels(System.Collections.Generic.IEnumerable{System.Tuple{NTextCat.LanguageInfo,System.IO.TextReader}})">
+            <summary>
+            Disposes TextReader instances!
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="T:NTextCat.CharacterNGramExtractor">
+            <summary>
+            Extracts char-ngrams out of TextReader, char[] or string.
+            </summary>
+        </member>
+        <member name="M:NTextCat.CharacterNGramExtractor.GetFeatures(System.String)">
+            <summary>
+            Splits text into tokens, transforms each "token" into "_token_" (prepends and appends underscores) 
+            and then extracts proper ngrams out of each "_token_".
+            </summary>
+            <param name="text"></param>
+            <returns>the sequence of ngrams extracted</returns>
+        </member>
+        <member name="M:NTextCat.CharacterNGramExtractor.GetFeatures(System.Char[])">
+            <summary>
+            Splits text into tokens, transforms each "token" into "_token_" (prepends and appends underscores) 
+            and then extracts proper ngrams out of each "_token_".
+            </summary>
+            <param name="text"></param>
+            <returns>the sequence of ngrams extracted</returns>
+        </member>
+        <member name="M:NTextCat.CharacterNGramExtractor.GetFeatures(System.IO.TextReader)">
+            <summary>
+            Splits text into tokens, transforms each "token" into "_token_" (prepends and appends underscores) 
+            and then extracts proper ngrams out of each "_token_".
+            </summary>
+            <param name="text"></param>
+            <returns>the sequence of ngrams extracted</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.AddLine(System.String,System.String)">
+            <summary>
+            Appends <see cref="P:System.Environment.NewLine"/> followed by <paramref name="tail"/> to the end of <paramref name="head"/>
+            </summary>
+            <param name="head"></param>
+            <param name="tail"></param>
+            <returns>reference to <paramref name="head"/> passed</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.AddLine(System.Text.StringBuilder)">
+            <summary>
+            Appends <see cref="P:System.Environment.NewLine"/> to the end of <paramref name="head"/>
+            Basically the same as <see cref="M:System.Text.StringBuilder.AppendLine"/>
+            </summary>
+            <param name="head"></param>
+            <returns>reference to <paramref name="head"/> passed</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.AddLine(System.Text.StringBuilder,System.String)">
+            <summary>
+            Appends <see cref="P:System.Environment.NewLine"/> followed by <paramref name="tail"/> to the end of <paramref name="head"/>
+            </summary>
+            <param name="head"></param>
+            <param name="tail"></param>
+            <returns>reference to <paramref name="head"/> passed</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.ToStrings``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns sequence of string representations of original items converted with <seealso cref="M:System.Object.ToString"/>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sequence">Sequence of items that need to be represented as strings</param>
+            <returns>Sequence of strings</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Interleave``1(System.Collections.Generic.IEnumerable{``0},``0,System.Boolean,System.Boolean)">
+            <summary>
+            interleaves initial sequence with specified interleaver. 
+            Output sequence looks like megasandwich, each bread is each intital sequence element and each cheese is interleaver.
+            </summary>
+            <typeparam name="T">type of sequence elements</typeparam>
+            <param name="sequence">initial sequence</param>
+            <param name="interleaver">"cheese" instance to put between elements of intital sequence</param>
+            <param name="startsWithInterleaver">
+            if true, additional interleaver is added to the beginnig of output sequence but not in case if intial sequence is empty</param>
+            <param name="endsWithInterleaver">
+            if true, additional interleaver is added to the end of output sequence but not in case if intial sequence is empty</param>
+            <returns>elements of initial sequence interleaved by interleaver</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Interleave``1(System.Collections.Generic.IEnumerable{``0},``0)">
+            <summary>
+            interleaves initial sequence with specified interleaver. 
+            Output sequence looks like megasandwich, each bread is each intital sequence element and each cheese is interleaver.
+            Is equivalent to calling <see cref="M:NTextCat.Commons.StringExtensions.Interleave``1(System.Collections.Generic.IEnumerable{``0},``0,System.Boolean,System.Boolean)"/> with false for "starts/ends with interleaver"
+            </summary>
+            <typeparam name="T">type of sequence elements</typeparam>
+            <param name="sequence">initial sequence</param>
+            <param name="interleaver">"cheese" instance to put between elements of intital sequence</param>
+            <returns>elements of initial sequence interleaved by interleaver</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Glues all <paramref name="strings"/> in a single string. Puts <paramref name="separator"/> between any two adjacent strings.
+            </summary>
+            <param name="strings"></param>
+            <param name="separator">is put between strings</param>
+            <returns>String in format: {Item1}[{separator}{Item2}[{separator}{Item3}...]]</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Split(System.String,System.String)">
+            <summary>
+            Returns substrings which were delimited in <paramref name="sourceString"/> with separator specified.
+            </summary>
+            <param name="sourceString">input string</param>
+            <param name="separator">separator between substrings</param>
+            <returns>sequence of strings</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Split(System.String,System.String,System.Int32)">
+            <summary>
+            Returns substrings which were delimited in <paramref name="sourceString"/> with separator specified.
+            </summary>
+            <param name="sourceString">input string</param>
+            <param name="separator">separator between substrings</param>
+            <param name="startInx">the begininning index of <paramref name="sourceString"/> from which separators are sought (any text before this index is ignored)</param>
+            <returns>sequence of strings</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.Split(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Returns substrings which were delimited in <paramref name="sourceString"/> with separator specified.
+            </summary>
+            <param name="sourceString">input string</param>
+            <param name="separator">separator between substrings</param>
+            <param name="startInx">the begininning index of <paramref name="sourceString"/> from which separators are sought (any text before this index is ignored)</param>
+            <param name="endInx">the end index of <paramref name="sourceString"/> up to which separators are sought (any text on or after this index is ignored)</param>
+            <returns>sequence of strings</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Invokes an <paramref name="action"/> on each element of sequence
+            </summary>
+            <typeparam name="T">type of sequence elements</typeparam>
+            <param name="sequence">initial sequence</param>
+            <param name="action">Invokes an <paramref name="action"/> on each element of sequence</param>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.WhereNot``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns those items of input sequence for which <paramref name="whereFunc"/> returns false
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="sequence">Input sequence of items</param>
+            <param name="whereFunc">Predicate filter</param>
+            <returns>Sequence of those items of input sequence for which <paramref name="whereFunc"/> returns false</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.StringIsLong(System.String)">
+            <summary>
+            Checks if input string is valid integer number
+            </summary>
+            <param name="str">input string</param>
+            <returns>true if <paramref name="str"/> is valid integer, otherwise false</returns>
+        </member>
+        <member name="M:NTextCat.Commons.StringExtensions.StringIsDouble(System.String)">
+            <summary>
+            Checks if input string is valid number (integer or fractional)
+            </summary>
+            <param name="str">input string</param>
+            <returns>true if input string is valid number (integer or fractional), otherwise false</returns>
+        </member>
+        <member name="P:NTextCat.LanguageInfo.Iso639_2T">
+            <summary>
+            A code of the language according to ISO639-2 (Part2T)
+            </summary>
+        </member>
+        <member name="T:NTextCat.NaiveBayesLanguageIdentifierFactory">
+            <summary>
+            Loads an instance of <see cref="T:NTextCat.NaiveBayesLanguageIdentifier"/> from file or trains a new instance out of a data set.
+            </summary>
+        </member>
+        <member name="T:NTextCat.NClassify.Distribution`1">
+            <summary>
+            
+            </summary>
+            <typeparam name="T"></typeparam>
+            <remarks>
+            Implementation of <see cref="T:NTextCat.NClassify.IDistribution`1"/> is not strict as <see cref="T:NTextCat.NClassify.Bag`1"/> cannot contain more than int.MaxValue numbers.
+            </remarks>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.DistinctRepresentedEvents">
+            <summary>
+            Distinct events represented (noise events are not included)
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.DistinctRepresentedEventsCount">
+            <summary>
+            Total count of distinct events represented (noise events are not included)
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.DistinctEventsCountWithNoise">
+            <summary>
+            Count of all distinct events including those that have been considered as noise and have no representative
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.DistinctNoiseEventsCount">
+            <summary>
+            Count of distinct events that have been considered as noise and have no representative (<see cref="M:NTextCat.NClassify.IDistribution`1.GetEventCount(`0)"/> returns 0)
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.TotalRepresentedEventCount">
+            <summary>
+            Total count of events (including repetitions) that are represented in the distribution (<see cref="M:NTextCat.NClassify.IDistribution`1.GetEventCount(`0)"/> returns value &gt; 0)
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.TotalEventCountWithNoise">
+            <summary>
+            Total count of all events (including repetitions) including those that have been considered as noise and have no representative (<see cref="M:NTextCat.NClassify.IDistribution`1.GetEventCount(`0)"/> returns 0)
+            </summary>
+        </member>
+        <member name="P:NTextCat.NClassify.IDistribution`1.TotalNoiseEventsCount">
+            <summary>
+            Total count of events (including repetitions) that have been considered as noise and have no representative (<see cref="M:NTextCat.NClassify.IDistribution`1.GetEventCount(`0)"/> returns 0)
+            </summary>
+        </member>
+        <member name="M:NTextCat.NClassify.IModifiableDistribution`1.AddNoise(System.Int64,System.Int64)">
+            <summary>
+            Adds noise to the distribution (unrepresented items that effect frequency and TotalCount values)
+            </summary>
+            <param name="totalCount">total count of events (including repetitions) that are considered as noise</param>
+            <param name="distinctCount">count of distinct events that are considered as noise and have not been seen by this distribution ever before 
+            (it's a burden of a client of the function to guarantee this)</param>
+        </member>
+        <member name="T:NTextCat.NClassify.KnnMonoCategorizedClassifier`2">
+            <summary>
+            Finds the most probable label (category) for the item that hasn't been seen before.
+            Given unknown item, finds N the closest known and labeled items. With that information produces the rankings for all labels.
+            Label's rank is calculated as an average distance to its N closest items.
+            Current implementation has N set to infinity.
+            </summary>
+            <typeparam name="TItem">known items that have been labeled</typeparam>
+            <typeparam name="TCategory">labels</typeparam>
+        </member>
+        <member name="T:NTextCat.RankedClassifier`1">
+            <summary>
+            
+            </summary>
+            <remarks>Used because KnnMonoCategorizedClassifier stores ranked events dictionary and not a regular distribution.
+            Any new distribution gets converted to the ranked events dictionary and gets compared to the known language ranked events dictionaries.
+            We could just compare distributions directly but then they have to get ranked each time 
+            inside of RankingDistanceCalculator (including the known language distributions) which imposes a performance hit.
+            </remarks>
+            <typeparam name="T">type of event of distribution</typeparam>
+        </member>
+        <member name="T:NTextCat.RankedLanguageIdentifier">
+            <summary>
+            Identifies the language of a given text.
+            Please use <see cref="T:NTextCat.RankedLanguageIdentifierFactory"/> to load an instance of this class from a file
+            </summary>
+        </member>
+        <member name="T:NTextCat.RankedLanguageIdentifierFactory">
+            <summary>
+            Loads an instance of <see cref="T:NTextCat.RankedLanguageIdentifier"/> from file or trains a new instance out of a data set.
+            </summary>
+        </member>
+        <member name="T:NTextCat.RankingDistanceCalculator`1">
+            <summary>
+            A non-linear distance calculator which calculates distance between two distributions
+            </summary>
+            <typeparam name="T">type of token used in Language Models</typeparam>
+        </member>
+        <member name="M:NTextCat.RankingDistanceCalculator`1.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="defaultRankDistanceOnAbsence">if ngram is absent in known language model, this number will be used as rank distance for this ngram between unknown and known language models</param>
+        </member>
+    </members>
+</doc>

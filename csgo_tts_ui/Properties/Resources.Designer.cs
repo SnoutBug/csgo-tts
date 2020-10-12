@@ -22,7 +22,7 @@ namespace csgo_tts_ui.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace csgo_tts_ui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("csgo_tts_ui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,12 +51,65 @@ namespace csgo_tts_ui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+        ///&lt;!--Contains models for the following languages (by ISO 639-3): dan, deu, eng, fra, ita, jpn, kor, nld, nor, por, rus, spa, swe, zho--&gt;
+        ///&lt;LanguageIdentificationProfile&gt;
+        ///  &lt;Parameters&gt;
+        ///    &lt;MaximumSizeOfDistribution&gt;4000&lt;/MaximumSizeOfDistribution&gt;
+        ///    &lt;MaxNGramLength&gt;5&lt;/MaxNGramLength&gt;
+        ///  &lt;/Parameters&gt;
+        ///  &lt;LanguageModels&gt;
+        ///    &lt;LanguageModel&gt;
+        ///      &lt;Language ISO639-2T=&quot;dan&quot; ISO639-3=&quot;dan&quot; /&gt;
+        ///      &lt;metadata /&gt;
+        ///      &lt;ngrams totalNoiseCount=&quot;4208189&quot; distinctNois [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Core14_profile {
+            get {
+                return ResourceManager.GetString("Core14_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] NTextCat {
+            get {
+                object obj = ResourceManager.GetObject("NTextCat", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
+        ///&lt;doc&gt;
+        ///    &lt;assembly&gt;
+        ///        &lt;name&gt;NTextCat&lt;/name&gt;
+        ///    &lt;/assembly&gt;
+        ///    &lt;members&gt;
+        ///        &lt;member name=&quot;T:NTextCat.BagOfWordsFeatureExtractor&quot;&gt;
+        ///            &lt;summary&gt;
+        ///            This implementation is not robust or production ready.
+        ///            &lt;/summary&gt;
+        ///        &lt;/member&gt;
+        ///        &lt;member name=&quot;P:NTextCat.BasicProfileFactoryBase`1.AllowUsingMultipleThreadsForTraining&quot;&gt;
+        ///            &lt;summary&gt;
+        ///            true if it is allowed to use more than one thread for training
+        ///         [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string NTextCat1 {
+            get {
+                return ResourceManager.GetString("NTextCat1", resourceCulture);
             }
         }
     }
