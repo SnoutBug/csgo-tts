@@ -28,6 +28,7 @@ Enables TTS for Counter-Strike: Global Offensive in-game chat
  Use Alias         | Enable whether aliases should be used or not.
  Delete            | CS:GO log files can get quite bit after some time, so if CS:GO is not running feel free to press this button.
  Refresh           | Enter **status** in the CS:GO console and press "OK" to add all players to the drop-down list.
+ Auto-Translate    | Translate the message to your language (Region)
  
  
 ## License
