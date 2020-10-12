@@ -1,4 +1,4 @@
-# Counter-Strike: Global Offensive TTS
+# Counter-Strike: Global Offensive TTS + Translator
 Enables TTS for Counter-Strike: Global Offensive in-game chat
 
 ## Download the latest release version [here](https://github.com/SnoutBug/csgotts/releases/latest)!
