@@ -20,7 +20,7 @@ namespace csgo_tts_ui
     public partial class csgo_tts_main : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.31;
+        double currentVersion = 1.32;
 
 
         //default settings
