@@ -2,6 +2,7 @@
 using NTextCat;
 using System.IO;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Speech.Synthesis;
 using System.Collections.Generic;
 using System.Drawing;
@@ -75,9 +76,14 @@ namespace csgo_tts_ui
         List<string> config = new List<string>();
         List<bool> muted = new List<bool>();
 
+        static SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+
         public csgo_tts_main()
         {
             InitializeComponent();
+
+            synthesizer.SetOutputToDefaultAudioDevice();
+
             bw.DoWork += backgroundWorker1_DoWork;
             bw.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             bw.WorkerReportsProgress = false;
@@ -85,7 +91,6 @@ namespace csgo_tts_ui
 
             //i will come back for this but it works for now, finally, ive spent way to long on this
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve2);
 
             string configFile = configPath + @"config.txt";
 
@@ -219,15 +224,14 @@ namespace csgo_tts_ui
             }
 
 
+
             init = false;
             UpdateFileSize();
             CheckForUpdates();
         }
-
         //main background loop
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            var synthesizer = new SpeechSynthesizer();
             var builder = new PromptBuilder();
             len1 = RefreshLog(path).Length;
 
@@ -260,6 +264,16 @@ namespace csgo_tts_ui
                     newLine = temp[temp.Length - 1];
                     currentTime = DateTime.Now;
                     UpdateFileSize();
+
+                    if (newLine.Contains("Unknown command: "))
+                    {
+                        if (newLine.Contains("!tts_skip"))
+                        {
+                            synthesizer.SpeakAsyncCancelAll();
+                        }
+                        //new commands comming soon
+                    }
+
                     //                   \/ special char right here
                     if (newLine.Contains('‎') && newLine.Contains("Terrorist)"))
                     {
@@ -345,6 +359,8 @@ namespace csgo_tts_ui
                         }
                         fullMessage = fullMessage + message;
                         builder.StartVoice(new CultureInfo(region));
+                        builder.AppendText(fullMessage);
+                        builder.EndVoice();
                         synthesizer.SelectVoiceByHints(gender, VoiceAge.Adult);
 
                         if (!muted[playerIndex])
@@ -353,10 +369,10 @@ namespace csgo_tts_ui
                             {
                                 if (timeoutPlayer[playerIndex] <= currentTime)
                                 {
-                                    synthesizer.SetOutputToDefaultAudioDevice();
-                                    builder.AppendText(fullMessage);
-                                    builder.EndVoice();
-                                    synthesizer.Speak(builder);
+                                    if (synthesizer.State.Equals(SynthesizerState.Ready))
+                                    {
+                                        synthesizer.SpeakAsync(builder);
+                                    }
                                     lastMessage[playerIndex] = message;
                                     lastChatter = name;
 
@@ -365,14 +381,15 @@ namespace csgo_tts_ui
                             }
                             else
                             {
-                                synthesizer.SetOutputToDefaultAudioDevice();
-                                builder.AppendText(fullMessage);
-                                builder.EndVoice();
-                                synthesizer.Speak(builder);
+                                if (synthesizer.State.Equals(SynthesizerState.Ready))
+                                {
+                                    synthesizer.SpeakAsync(builder);
+                                }
                                 lastMessage[playerIndex] = message;
                                 lastChatter = name;
                                 timeoutPlayer[playerIndex] = currentTime.AddSeconds(timeout);
                             }
+                            
                         }
                         builder.ClearContent();
                     }
@@ -497,6 +514,7 @@ namespace csgo_tts_ui
                 btnStartStop.Text = "Start";
                 started = false;
                 btnRefresh.Enabled = false;
+                synthesizer.SpeakAsyncCancelAll();
                 bw.CancelAsync();
 
             }
@@ -993,9 +1011,9 @@ namespace csgo_tts_ui
             {
                 Encoding = System.Text.Encoding.UTF8
             };
-            var result = webClient.DownloadString(url);
             try
             {
+                var result = webClient.DownloadString(url);
                 result = result.Substring(4, result.IndexOf("\"", 4, StringComparison.Ordinal) - 4);
                 return result;
             }
@@ -1021,20 +1039,6 @@ namespace csgo_tts_ui
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".dll", "");
-
-            dllName = dllName.Replace(".", "_");
-
-            if (dllName.EndsWith("_resources")) return null;
-
-            System.Resources.ResourceManager rm = new System.Resources.ResourceManager(GetType().Namespace + ".Properties.Resources", System.Reflection.Assembly.GetExecutingAssembly());
-
-            byte[] bytes = (byte[])rm.GetObject(dllName);
-
-            return System.Reflection.Assembly.Load(bytes);
-        }
-        System.Reflection.Assembly CurrentDomain_AssemblyResolve2(object sender, ResolveEventArgs args)
-        {
-            string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".xml", "");
 
             dllName = dllName.Replace(".", "_");
 
