@@ -22,16 +22,18 @@ namespace csgo_tts_ui
         //CURRENT VERSION
         double currentVersion = 1.32;
 
+        public static string TEMPSTRING = "this is a test";
 
         //default settings
         string path = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive";
-        string region = "en-US";
+        public static string region = "en-US";
         string genderStr = "Male";              // gender readable
         VoiceGender gender = VoiceGender.Male; // and non-readable
         bool readNames = true;
         bool readSpots = false;
         bool combine = true;
         bool filler = true;
+        public static string messageOrder = "NFSM";
         bool useAlias = false;
         bool translate = true;
         int timeout = 10;
@@ -76,8 +78,8 @@ namespace csgo_tts_ui
         List<string> config = new List<string>();
         List<bool> muted = new List<bool>();
 
-        static SpeechSynthesizer synthesizer = new SpeechSynthesizer();
-
+        public static SpeechSynthesizer synthesizer = new SpeechSynthesizer();
+        public static List<char> letters = new List<char>();
         public csgo_tts_main()
         {
             InitializeComponent();
@@ -117,24 +119,24 @@ namespace csgo_tts_ui
             }
 
             //read config file
-            if (File.ReadAllLines(configFile).Length > 9)
-            {
-                path = File.ReadLines(configFile).Skip(0).Take(1).First().Split('=')[1];
-                timeout = Int16.Parse(File.ReadLines(configFile).Skip(1).Take(1).First().Split('=')[1]);
-                readNames = bool.Parse(File.ReadLines(configFile).Skip(2).Take(1).First().Split('=')[1]);
-                filler = bool.Parse(File.ReadLines(configFile).Skip(3).Take(1).First().Split('=')[1]);
-                readSpots = bool.Parse(File.ReadLines(configFile).Skip(4).Take(1).First().Split('=')[1]);
-                combine = bool.Parse(File.ReadLines(configFile).Skip(5).Take(1).First().Split('=')[1]);
-                region = File.ReadLines(configFile).Skip(6).Take(1).First().Split('=')[1];
-                genderStr = File.ReadLines(configFile).Skip(7).Take(1).First().Split('=')[1];
-                useAlias = bool.Parse(File.ReadLines(configFile).Skip(8).Take(1).First().Split('=')[1]);
-                translate = bool.Parse(File.ReadLines(configFile).Skip(9).Take(1).First().Split('=')[1]);
-            }
-            else
+            if (File.ReadAllLines(configFile).Length < 10)
             {
                 File.Delete(configFile);
                 CreateConfig(configFile);
             }
+            path = File.ReadLines(configFile).Skip(0).Take(1).First().Split('=')[1];
+            timeout = Int16.Parse(File.ReadLines(configFile).Skip(1).Take(1).First().Split('=')[1]);
+            readNames = bool.Parse(File.ReadLines(configFile).Skip(2).Take(1).First().Split('=')[1]);
+            filler = bool.Parse(File.ReadLines(configFile).Skip(3).Take(1).First().Split('=')[1]);
+            readSpots = bool.Parse(File.ReadLines(configFile).Skip(4).Take(1).First().Split('=')[1]);
+            combine = bool.Parse(File.ReadLines(configFile).Skip(5).Take(1).First().Split('=')[1]);
+            region = File.ReadLines(configFile).Skip(6).Take(1).First().Split('=')[1];
+            genderStr = File.ReadLines(configFile).Skip(7).Take(1).First().Split('=')[1];
+            useAlias = bool.Parse(File.ReadLines(configFile).Skip(8).Take(1).First().Split('=')[1]);
+            translate = bool.Parse(File.ReadLines(configFile).Skip(9).Take(1).First().Split('=')[1]);
+            letters = File.ReadLines(configFile).Skip(10).Take(1).First().Split('=')[1].ToCharArray().ToList();
+            messageOrder = File.ReadLines(configFile).Skip(10).Take(1).First().Split('=')[1];
+
             //convert variables from config file to usable
             if (genderStr == "Female")
             {
@@ -307,57 +309,50 @@ namespace csgo_tts_ui
 
                         message = message.Replace("\n", "");
                         //compile message from config file settings
-                        string from = GetLanguage(message);
-                        string to = region.Substring(0, 2);
-                        string fillerStr = "wrote";
-                        fullMessage = "";
-                        if (translate)
-                        {
-                            message = Translate(message, from, to);
-                            fillerStr = Translate(fillerStr, "en", to);
-                        }
+                        string aliasString = alias[playerIndex];
+                        fullMessage = BuildMessageWithCustomOrder(name, aliasString, spot, message, letters);
+                        //if (readNames)
+                        //{
+                        //    fullMessage = name;
+                        //    if (useAlias)
+                        //    {
+                        //        if (alias[playerIndex] != "None")
+                        //        {
+                        //            fullMessage = aliasString;
+                        //        }
+                        //    }
+                        //}
 
-                        if (readNames)
-                        {
-                            fullMessage = name;
-                            if (useAlias)
-                            {
-                                if (alias[playerIndex] != "None")
-                                {
-                                    fullMessage = Translate(alias[playerIndex], "en", to);
-                                }
-                            }
-                        }
+                        //if (filler)
+                        //{
+                        //    fullMessage = fullMessage + " "+fillerStr+": ";
+                        //}
+                        //else
+                        //{
+                        //    fullMessage = fullMessage + "!";
+                        //}
 
-                        if (filler)
-                        {
-                            fullMessage = fullMessage + " "+fillerStr+": ";
-                        }
-                        else
-                        {
-                            fullMessage = fullMessage + "!";
-                        }
+                        //if (readSpots)
+                        //{
+                        //    fullMessage = fullMessage + " @" + spot;
+                        //}
 
-                        if (readSpots)
-                        {
-                            fullMessage = fullMessage + " @" + spot;
-                        }
+                        //if (combine)
+                        //{
+                        //    if (lastChatter == name)
+                        //    {
+                        //        if (timeoutPlayer[playerIndex] >= currentTime)
+                        //        {
+                        //            fullMessage = "";
+                        //        }
+                        //        else
+                        //        {
+                        //            lastChatter = "";
+                        //        }
+                        //    }
+                        //}
+                        //fullMessage = fullMessage + message;
 
-                        if (combine)
-                        {
-                            if (lastChatter == name)
-                            {
-                                if (timeoutPlayer[playerIndex] >= currentTime)
-                                {
-                                    fullMessage = "";
-                                }
-                                else
-                                {
-                                    lastChatter = "";
-                                }
-                            }
-                        }
-                        fullMessage = fullMessage + message;
                         builder.StartVoice(new CultureInfo(region));
                         builder.AppendText(fullMessage);
                         builder.EndVoice();
@@ -622,8 +617,8 @@ namespace csgo_tts_ui
             changeLine(8,  "Gender             =" + Convert.ToString(genderStr), tempPath);
             changeLine(9,  "Use Alias          =" + Convert.ToString(useAlias), tempPath);
             changeLine(10, "Auto-Translate     =" + Convert.ToString(translate), tempPath);
+            changeLine(11, "Message Order      =" + Convert.ToString(messageOrder), tempPath);
         }
-
         private void BtnBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
@@ -1034,6 +1029,7 @@ namespace csgo_tts_ui
             config.Add("Gender             =" + gender);
             config.Add("Use Alias          =" + useAlias);
             config.Add("Auto-Translate     =" + translate);
+            config.Add("Message Order      =" + messageOrder);
             File.WriteAllLines(configFile, config);
         }
         System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -1049,6 +1045,70 @@ namespace csgo_tts_ui
             byte[] bytes = (byte[])rm.GetObject(dllName);
 
             return System.Reflection.Assembly.Load(bytes);
+        }
+
+        private void BtnTmp_Click(object sender, EventArgs e)
+        {
+            csgo_tts_settings csgottsSettings = new csgo_tts_settings();
+            csgottsSettings.Show();
+        }
+
+        private string BuildMessageWithCustomOrder(string name, string alias, string spot, string message, List<char> letters)
+        {
+            string from = GetLanguage(message);
+            string to = region.Substring(0, 2);
+            string fillerString = string.Empty;
+            string BuiltMessage = string.Empty;
+            if (letters.IndexOf('M') < letters.IndexOf('F'))
+            {
+                fillerString = "by";
+            }
+            else
+            {
+                fillerString = "wrote:";
+            }
+
+            if (translate)
+            {
+                fillerString = Translate(fillerString, from, to);
+                alias = Translate(alias, from, to);
+                if (from != to)
+                {
+                    message = Translate(message, from, to);
+                }
+            }
+
+            foreach (char letter in letters)
+            {
+
+                if (letter == 'N' && readNames)
+                {
+                    if (!useAlias || alias == "None")
+                    {
+                        BuiltMessage = BuiltMessage +" "+ name + " ";
+                    }
+                    else
+                    {
+                        BuiltMessage = BuiltMessage + " " + alias + " ";
+                    }
+                }
+
+                if (letter == 'F' && filler)
+                {
+                    BuiltMessage = BuiltMessage + " " + fillerString + " ";
+                }
+
+                if (letter == 'S' && readSpots)
+                {
+                    BuiltMessage = BuiltMessage + " @ " + spot + " ";
+                }
+
+                if (letter == 'M')
+                {
+                    BuiltMessage = BuiltMessage + " " + message + " ";
+                }
+            }
+            return BuiltMessage;
         }
     }
 }

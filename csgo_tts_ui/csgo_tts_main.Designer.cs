@@ -64,6 +64,7 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.checkTranslate = new System.Windows.Forms.CheckBox();
+            this.btnCustomOrder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,7 +86,7 @@
             // checkName
             // 
             this.checkName.AutoSize = true;
-            this.checkName.Location = new System.Drawing.Point(12, 42);
+            this.checkName.Location = new System.Drawing.Point(12, 61);
             this.checkName.Name = "checkName";
             this.checkName.Size = new System.Drawing.Size(88, 17);
             this.checkName.TabIndex = 1;
@@ -96,7 +97,7 @@
             // checkSpot
             // 
             this.checkSpot.AutoSize = true;
-            this.checkSpot.Location = new System.Drawing.Point(12, 65);
+            this.checkSpot.Location = new System.Drawing.Point(12, 84);
             this.checkSpot.Name = "checkSpot";
             this.checkSpot.Size = new System.Drawing.Size(82, 17);
             this.checkSpot.TabIndex = 2;
@@ -107,7 +108,7 @@
             // checkFiller
             // 
             this.checkFiller.AutoSize = true;
-            this.checkFiller.Location = new System.Drawing.Point(12, 88);
+            this.checkFiller.Location = new System.Drawing.Point(12, 107);
             this.checkFiller.Name = "checkFiller";
             this.checkFiller.Size = new System.Drawing.Size(69, 17);
             this.checkFiller.TabIndex = 3;
@@ -118,7 +119,7 @@
             // checkCombine
             // 
             this.checkCombine.AutoSize = true;
-            this.checkCombine.Location = new System.Drawing.Point(12, 111);
+            this.checkCombine.Location = new System.Drawing.Point(12, 130);
             this.checkCombine.Name = "checkCombine";
             this.checkCombine.Size = new System.Drawing.Size(118, 17);
             this.checkCombine.TabIndex = 4;
@@ -128,7 +129,7 @@
             // 
             // numTimeout
             // 
-            this.numTimeout.Location = new System.Drawing.Point(9, 171);
+            this.numTimeout.Location = new System.Drawing.Point(10, 197);
             this.numTimeout.Name = "numTimeout";
             this.numTimeout.Size = new System.Drawing.Size(37, 20);
             this.numTimeout.TabIndex = 5;
@@ -137,7 +138,7 @@
             // labelTimeout
             // 
             this.labelTimeout.AutoSize = true;
-            this.labelTimeout.Location = new System.Drawing.Point(52, 175);
+            this.labelTimeout.Location = new System.Drawing.Point(53, 201);
             this.labelTimeout.Name = "labelTimeout";
             this.labelTimeout.Size = new System.Drawing.Size(97, 13);
             this.labelTimeout.TabIndex = 6;
@@ -204,7 +205,7 @@
             // labelSettings3
             // 
             this.labelSettings3.AutoSize = true;
-            this.labelSettings3.Location = new System.Drawing.Point(9, 144);
+            this.labelSettings3.Location = new System.Drawing.Point(10, 170);
             this.labelSettings3.Name = "labelSettings3";
             this.labelSettings3.Size = new System.Drawing.Size(84, 13);
             this.labelSettings3.TabIndex = 11;
@@ -255,7 +256,7 @@
             // 
             this.dropPlayerName.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.dropPlayerName.FormattingEnabled = true;
-            this.dropPlayerName.Location = new System.Drawing.Point(209, 171);
+            this.dropPlayerName.Location = new System.Drawing.Point(209, 152);
             this.dropPlayerName.Name = "dropPlayerName";
             this.dropPlayerName.Size = new System.Drawing.Size(140, 21);
             this.dropPlayerName.TabIndex = 13;
@@ -264,7 +265,7 @@
             // labelPlayerName
             // 
             this.labelPlayerName.AutoSize = true;
-            this.labelPlayerName.Location = new System.Drawing.Point(206, 153);
+            this.labelPlayerName.Location = new System.Drawing.Point(206, 134);
             this.labelPlayerName.Name = "labelPlayerName";
             this.labelPlayerName.Size = new System.Drawing.Size(67, 13);
             this.labelPlayerName.TabIndex = 14;
@@ -281,7 +282,7 @@
             "Orange",
             "Purple",
             "Yellow"});
-            this.dropAlias.Location = new System.Drawing.Point(369, 171);
+            this.dropAlias.Location = new System.Drawing.Point(369, 152);
             this.dropAlias.Name = "dropAlias";
             this.dropAlias.Size = new System.Drawing.Size(80, 21);
             this.dropAlias.TabIndex = 13;
@@ -290,7 +291,7 @@
             // labelAlias
             // 
             this.labelAlias.AutoSize = true;
-            this.labelAlias.Location = new System.Drawing.Point(366, 153);
+            this.labelAlias.Location = new System.Drawing.Point(366, 134);
             this.labelAlias.Name = "labelAlias";
             this.labelAlias.Size = new System.Drawing.Size(29, 13);
             this.labelAlias.TabIndex = 14;
@@ -299,7 +300,7 @@
             // checkMute
             // 
             this.checkMute.AutoSize = true;
-            this.checkMute.Location = new System.Drawing.Point(455, 174);
+            this.checkMute.Location = new System.Drawing.Point(455, 155);
             this.checkMute.Name = "checkMute";
             this.checkMute.Size = new System.Drawing.Size(50, 17);
             this.checkMute.TabIndex = 16;
@@ -310,7 +311,7 @@
             // checkAlias
             // 
             this.checkAlias.AutoSize = true;
-            this.checkAlias.Location = new System.Drawing.Point(209, 199);
+            this.checkAlias.Location = new System.Drawing.Point(209, 180);
             this.checkAlias.Name = "checkAlias";
             this.checkAlias.Size = new System.Drawing.Size(70, 17);
             this.checkAlias.TabIndex = 17;
@@ -363,7 +364,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(511, 170);
+            this.btnRefresh.Location = new System.Drawing.Point(511, 151);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(75, 23);
             this.btnRefresh.TabIndex = 21;
@@ -382,11 +383,22 @@
             this.checkTranslate.UseVisualStyleBackColor = true;
             this.checkTranslate.CheckedChanged += new System.EventHandler(this.CheckTranslate_CheckedChanged);
             // 
+            // btnCustomOrder
+            // 
+            this.btnCustomOrder.Location = new System.Drawing.Point(10, 31);
+            this.btnCustomOrder.Name = "btnCustomOrder";
+            this.btnCustomOrder.Size = new System.Drawing.Size(75, 23);
+            this.btnCustomOrder.TabIndex = 23;
+            this.btnCustomOrder.Text = "Customize";
+            this.btnCustomOrder.UseVisualStyleBackColor = true;
+            this.btnCustomOrder.Click += new System.EventHandler(this.BtnTmp_Click);
+            // 
             // csgo_tts_main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 335);
+            this.Controls.Add(this.btnCustomOrder);
             this.Controls.Add(this.checkTranslate);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnHelp);
@@ -466,6 +478,7 @@
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.CheckBox checkTranslate;
+        private System.Windows.Forms.Button btnCustomOrder;
     }
 }
 

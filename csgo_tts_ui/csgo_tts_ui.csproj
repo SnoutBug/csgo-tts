@@ -244,10 +244,19 @@
     <Compile Include="csgo_tts_main.Designer.cs">
       <DependentUpon>csgo_tts_main.cs</DependentUpon>
     </Compile>
+    <Compile Include="csgo_tts_settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="csgo_tts_settings.Designer.cs">
+      <DependentUpon>csgo_tts_settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="csgo_tts_main.resx">
       <DependentUpon>csgo_tts_main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="csgo_tts_settings.resx">
+      <DependentUpon>csgo_tts_settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
