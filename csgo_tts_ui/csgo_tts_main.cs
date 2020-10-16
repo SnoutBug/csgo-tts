@@ -20,7 +20,7 @@ namespace csgo_tts_ui
     public partial class csgo_tts_main : Form
     {
         //CURRENT VERSION
-        double currentVersion = 1.32;
+        double currentVersion = 1.4;
 
         public static string TEMPSTRING = "this is a test";
 
