@@ -1,8 +1,7 @@
 ﻿using System;
 using NTextCat;
 using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 using System.Speech.Synthesis;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +11,7 @@ using System.Threading;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Net;
-
+using System.Net.Http;
 //please excuse this mess, this is my first ever program in c#
 
 namespace csgo_tts_ui
@@ -898,7 +897,10 @@ namespace csgo_tts_ui
                 {
                     var responseContent = response.Content;
                     string responseString = responseContent.ReadAsStringAsync().Result;
-                    double ver = Convert.ToDouble(responseString.Split(',')[7].Split('"')[3].Replace('.',','));
+                    string[] responseArray = responseString.Split(',');
+                    JObject joResponse = JObject.Parse(responseString);
+                    JValue Jtag = (JValue)joResponse["tag_name"];
+                    double ver = Convert.ToDouble(Convert.ToString(Jtag).Replace('.',','));
                     if (ver > currentVersion)
                     {
                         DialogResult result = MessageBox.Show("There is a new version available.\nDo you want to download it?", "Update Available!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);

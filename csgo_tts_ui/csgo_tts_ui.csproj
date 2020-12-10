@@ -305,6 +305,7 @@
   <ItemGroup>
     <None Include="NTextCat.dll" />
     <None Include="NTextCat.xml" />
+    <None Include="bin\Debug\Newtonsoft.Json.dll" />
     <Content Include="Core14.profile.xml" />
     <Content Include="csgotts_new.ico" />
   </ItemGroup>

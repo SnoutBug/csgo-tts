@@ -72,11 +72,21 @@ namespace csgo_tts_ui.Properties {
         ///    &lt;LanguageModel&gt;
         ///      &lt;Language ISO639-2T=&quot;dan&quot; ISO639-3=&quot;dan&quot; /&gt;
         ///      &lt;metadata /&gt;
-        ///      &lt;ngrams totalNoiseCount=&quot;4208189&quot; distinctNois [rest of string was truncated]&quot;;.
+        ///      &lt;ngrams totalNoiseCount=&quot;4208189&quot; distinctNoiseCount=&quot;114 [rest of string was truncated]&quot;;.
         /// </summary>
         public static string Core14_profile {
             get {
                 return ResourceManager.GetString("Core14_profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Newtonsoft_Json {
+            get {
+                object obj = ResourceManager.GetObject("Newtonsoft_Json", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -105,7 +115,7 @@ namespace csgo_tts_ui.Properties {
         ///        &lt;member name=&quot;P:NTextCat.BasicProfileFactoryBase`1.AllowUsingMultipleThreadsForTraining&quot;&gt;
         ///            &lt;summary&gt;
         ///            true if it is allowed to use more than one thread for training
-        ///         [rest of string was truncated]&quot;;.
+        ///            &lt;/summary&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         public static string NTextCat1 {
             get {
