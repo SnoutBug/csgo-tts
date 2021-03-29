@@ -31,7 +31,6 @@ Enables TTS for Counter-Strike: Global Offensive in-game chat
  Auto-Translate    | Translate the message to your language (Region)
  Skip voice message| **bind "any_button_here" "!tts_skip"** inside of the CSGO console.
  
-## [Donate](https://www.paypal.com/paypalme/snoutie)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
